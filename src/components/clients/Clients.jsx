@@ -5,11 +5,13 @@ import { firestoreConnect } from "react-redux-firebase";
 
 import { Link } from "react-router-dom";
 
+import Spinner from "../layout/Spinner";
+
 const Clients = ({ clients }) => {
   return (
     <>
       {!clients ? (
-        <h1>Loading</h1>
+        <Spinner />
       ) : (
         <div className="row">
           <div className="col-md-12 mb-4">
