@@ -1,25 +1,21 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import Clients from "./components/clients/Clients";
+import EditClient from "./components/clients/EditClient";
+import ShowClient from "./components/clients/ShowClient";
+import NewClient from "./components/clients/NewClient";
+
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Switch>
+        <Route exact path="/clients" component={Clients} />
+        <Route exact path="/clients/new" component={NewClient} />
+        <Route exact path="/clients/show/:id" component={ShowClient} />
+        <Route exact path="/clients/edit/:id" component={EditClient} />
+      </Switch>
+    </Router>
   );
 }
 
