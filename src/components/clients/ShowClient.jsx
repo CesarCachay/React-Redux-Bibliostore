@@ -1,13 +1,11 @@
-import React, { Component } from "react";
+import React from "react";
 
-class ShowClient extends Component {
-  render() {
-    return (
-      <div>
-        <h1>I am your client x</h1>
-      </div>
-    );
-  }
-}
+const ShowClient = () => {
+  return (
+    <div>
+      <h1>I'm showing an specific client</h1>
+    </div>
+  );
+};
 
 export default ShowClient;
