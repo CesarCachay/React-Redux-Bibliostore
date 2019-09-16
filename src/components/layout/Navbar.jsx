@@ -5,7 +5,7 @@ const Navbar = () => {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary mb-5">
       <nav className="navbar navbar-light">
-        <Link>
+        <Link to={"/"}>
           <span className="navbar-brand mb-0 h1">Bibliostore Manager</span>
         </Link>
       </nav>
