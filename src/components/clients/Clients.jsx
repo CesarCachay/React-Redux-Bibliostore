@@ -7,7 +7,14 @@ import { Link } from "react-router-dom";
 
 import Spinner from "../layout/Spinner";
 
-const Clients = ({ clients }) => {
+const Clients = ({ clients, firestore }) => {
+  const deleteClient = id => {
+    firestore.delete({
+      collection: "clients",
+      doc: id
+    });
+  };
+
   return (
     <>
       {!clients ? (
@@ -37,10 +44,10 @@ const Clients = ({ clients }) => {
             <tbody>
               {clients.map(client => (
                 <tr key={client.id}>
-                  <td>
+                  <td className="text-dark">
                     {client.first_name} {client.last_name}
                   </td>
-                  <td>{client.career}</td>
+                  <td className="text-dark">{client.career}</td>
                   <td>
                     <Link
                       to={`/clients/show/${client.id}`}
@@ -49,6 +56,14 @@ const Clients = ({ clients }) => {
                       <i className="fas fa-angle-double-right"></i> {""}More
                       information
                     </Link>
+
+                    <button
+                      type="button"
+                      className="btn btn-danger btn-block"
+                      onClick={() => deleteClient(client.id)}
+                    >
+                      <i className="fas fa-trash-alt"></i> {""} Delete
+                    </button>
                   </td>
                 </tr>
               ))}
