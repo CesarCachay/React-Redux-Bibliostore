@@ -7,14 +7,14 @@ import { Link } from "react-router-dom";
 
 import Spinner from "../layout/Spinner";
 
-const Books = ({ books }) => {
+const Books = ({ books, firestore }) => {
   if (!books) return <Spinner />;
-
   return (
     <div className="row">
       <div className="col-12 mb-4">
         <Link to="/books/new" className="btn btn-success">
           <i className="fas fa-plus"></i> {""}
+          New Book
         </Link>
       </div>
       <div className="col-md-8">
@@ -67,5 +67,7 @@ const Books = ({ books }) => {
 
 export default compose(
   firestoreConnect([{ collection: "books" }]),
-  connect((state, props) => ({ books: state.firestore.ordered.books }))
+  connect((state, props) => ({
+    books: state.firestore.ordered.books
+  }))
 )(Books);
