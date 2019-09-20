@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { firestoreConnect } from "react-redux-firebase";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 class NewBook extends Component {
   state = {
@@ -21,6 +22,15 @@ class NewBook extends Component {
     // Add in the DB of firestore and redirect
     firestore
       .add({ collection: "books" }, newBook)
+      .then(() =>
+        Swal.fire({
+          position: "center",
+          type: "success",
+          title: "Student has been created in the database",
+          showConfirmButton: false,
+          timer: 1500
+        })
+      )
       .then(() => history.push("/"));
   };
 
