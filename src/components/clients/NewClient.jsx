@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { firestoreConnect } from "react-redux-firebase";
+import Swal from "sweetalert2";
 
 class NewClient extends Component {
   state = {
@@ -23,7 +24,16 @@ class NewClient extends Component {
     const { firestore, history } = this.props;
     firestore
       .add({ collection: "clients" }, newClient)
-      .then(() => history.push("/clients"));
+      .then(() =>
+        Swal.fire({
+          position: "center",
+          type: "success",
+          title: "Student has been created in the database",
+          showConfirmButton: false,
+          timer: 1500
+        })
+      )
+      .then(history.push("/clients"));
   };
 
   render() {

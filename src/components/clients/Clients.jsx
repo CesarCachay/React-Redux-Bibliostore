@@ -2,6 +2,7 @@ import React from "react";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
+import Swal from "sweetalert2";
 
 import { Link } from "react-router-dom";
 
@@ -60,7 +61,27 @@ const Clients = ({ clients, firestore }) => {
                     <button
                       type="button"
                       className="btn btn-danger btn-block"
-                      onClick={() => deleteClient(client.id)}
+                      onClick={() =>
+                        Swal.fire({
+                          title: "Are you sure?",
+                          text: "Do you really want to delete this book?",
+                          type: "warning",
+                          showCancelButton: true,
+                          confirmButtonColor: "#3085d6",
+                          cancelButtonColor: "#d33",
+                          confirmButtonText: "Yes, delete it!"
+                        })
+                          .then(result => {
+                            if (result.value) {
+                              Swal.fire(
+                                "Deleted!",
+                                "The book has been deleted.",
+                                "success"
+                              );
+                            }
+                          })
+                          .then(() => deleteClient(client.id))
+                      }
                     >
                       <i className="fas fa-trash-alt"></i> {""} Delete
                     </button>

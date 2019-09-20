@@ -2,12 +2,17 @@ import React from "react";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
+import Swal from "sweetalert2";
 
 import { Link } from "react-router-dom";
 
 import Spinner from "../layout/Spinner";
 
 const Books = ({ books, firestore }) => {
+  const deleteBook = id => {
+    firestore.delete({ collection: "books", doc: id });
+  };
+
   if (!books) return <Spinner />;
   return (
     <div className="row">
@@ -52,7 +57,31 @@ const Books = ({ books, firestore }) => {
                   <i className="fas fa-angle-double-right"></i> {""}
                   More Information
                 </Link>
-                <button type="button" className="btn btn-danger btn-block">
+                <button
+                  type="button"
+                  className="btn btn-danger btn-block"
+                  onClick={() =>
+                    Swal.fire({
+                      title: "Are you sure?",
+                      text: "Do you really want to delete this book?",
+                      type: "warning",
+                      showCancelButton: true,
+                      confirmButtonColor: "#3085d6",
+                      cancelButtonColor: "#d33",
+                      confirmButtonText: "Yes, delete it!"
+                    })
+                      .then(result => {
+                        if (result.value) {
+                          Swal.fire(
+                            "Deleted!",
+                            "The book has been deleted.",
+                            "success"
+                          );
+                        }
+                      })
+                      .then(() => deleteBook(book.id))
+                  }
+                >
                   <i className="fas fa-trash-alt"></i> {""}
                   Delete
                 </button>
