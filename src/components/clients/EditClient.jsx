@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
+import Swal from "sweetalert2";
 
 import { Link } from "react-router-dom";
 
@@ -35,6 +36,15 @@ class EditClient extends Component {
           doc: client.id
         },
         updatedClient
+      )
+      .then(() =>
+        Swal.fire({
+          position: "center",
+          type: "success",
+          title: "Student edited successfully",
+          showConfirmButton: false,
+          timer: 1500
+        })
       )
       .then(history.push("/clients"));
   };

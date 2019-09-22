@@ -30,7 +30,7 @@ const Books = ({ books, firestore }) => {
       </div>
 
       <table className="table table-striped mt-4">
-        <thead className="text-light bg-primary">
+        <thead className="text-light bg-success">
           <tr>
             <th>Title</th>
             <th>ISBN</th>

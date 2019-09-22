@@ -52,7 +52,7 @@ const Clients = ({ clients, firestore }) => {
                   <td>
                     <Link
                       to={`/clients/show/${client.id}`}
-                      className="btn btn-success btn-block"
+                      className="btn btn-primary btn-block"
                     >
                       <i className="fas fa-angle-double-right"></i> {""}More
                       information
