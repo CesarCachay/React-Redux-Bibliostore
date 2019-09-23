@@ -2,10 +2,12 @@ import React, { Component } from "react";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
-
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 import Spinner from "../layout/Spinner";
+
+import ClientCard from "../clients/ClientCard";
 
 class BorrowBook extends Component {
   state = {
@@ -29,10 +31,38 @@ class BorrowBook extends Component {
       if (result.empty) {
         this.setState({ noResults: true, result: {} });
       } else {
-        const getData = result.docs[0];
-        this.setState({ result: getData.data(), noResults: false });
+        const dataFromQuery = result.docs[0];
+        this.setState({ result: dataFromQuery.data(), noResults: false });
       }
     });
+  };
+
+  // This will save the student information who ask for books
+  askForBook = () => {
+    const student = this.state.result;
+    // Date to return book
+    student.lend_date = new Date().toLocaleDateString();
+
+    // Get the book
+    const updatedBook = this.props.book;
+    // Add the student or client to our boook
+    updatedBook.lended.push(student);
+
+    const { firestore, history, book } = this.props;
+
+    // Save the changes(update) in the database from firestore
+    firestore
+      .update({ collection: "books", doc: book.id }, updatedBook)
+      .then(() =>
+        Swal.fire({
+          position: "center",
+          type: "success",
+          title: "Book lended successfully!",
+          showConfirmButton: false,
+          timer: 1500
+        })
+      )
+      .then(history.push("/"));
   };
 
   readData = e => {
@@ -45,6 +75,21 @@ class BorrowBook extends Component {
     const { book } = this.props;
 
     if (!book) return <Spinner />;
+
+    const { noResults, result } = this.state;
+
+    // let studentCard, btnAsk;
+    // if (result.name) {
+    //   studentCard = <ClientCard client={result} />;
+    //   btnAsk = (
+    //     <button type="button" className="btn btn-success" onClick={askForBook}>
+    //       Ask for this book
+    //     </button>
+    //   );
+    // } else {
+    //   studentCard = null;
+    //   btnAsk = null;
+    // }
 
     return (
       <div className="row">
@@ -60,7 +105,7 @@ class BorrowBook extends Component {
 
           <div className="row justify-content-center mt-5">
             <div className="col-md-8">
-              <form onSubmit={this.searchClient}>
+              <form onSubmit={this.searchClient} className="mb-4">
                 <legend className="color-primary text-center">
                   Search the student by their code:
                 </legend>
@@ -79,6 +124,19 @@ class BorrowBook extends Component {
                   />
                 </div>
               </form>
+              {/* Here we will show the student card and the button for borrow a book*/}
+              {result.first_name ? (
+                <>
+                  <ClientCard result={result} />
+                  <button
+                    type="button"
+                    className="btn btn-primary btn-block"
+                    onClick={this.askForBook}
+                  >
+                    Borrow Book
+                  </button>
+                </>
+              ) : null}
             </div>
           </div>
         </div>
