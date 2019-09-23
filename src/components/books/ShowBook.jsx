@@ -8,6 +8,21 @@ import { Link } from "react-router-dom";
 import Spinner from "../layout/Spinner";
 
 class ShowBook extends Component {
+  returnBook = id => {
+    const { firestore, book } = this.props;
+    const updatedBook = { ...this.props.book };
+    const returnedBook = book.lended.filter(element => element.code !== id);
+    updatedBook.lended = returnedBook;
+
+    firestore.update(
+      {
+        collection: "books",
+        doc: updatedBook.id
+      },
+      updatedBook
+    );
+  };
+
   render() {
     const { book } = this.props;
     if (!book) return <Spinner />;
@@ -16,7 +31,7 @@ class ShowBook extends Component {
       <div className="row">
         <div className="col-md-6 mb-4">
           <Link to="/" className="btn btn-secondary">
-            <i className="fas fa-arrow=circle-left"></i> {""}
+            <i className="fas fa-arrow-circle-left"></i> {""}
             Go Back
           </Link>
         </div>
@@ -60,6 +75,38 @@ class ShowBook extends Component {
               Lend a Book
             </Link>
           ) : null}
+          <h3 className="my-2">Students with this book:</h3>
+          {book.lended.map(student => (
+            <div className="card my-2" key={student.code}>
+              <h4 className="card-header">
+                {student.first_name} {student.last_name}
+              </h4>
+              <div className="card-body">
+                <p>
+                  <span className="font-weight-bold">Student Code:</span>{" "}
+                  {student.code}
+                </p>
+                <p>
+                  <span className="font-weight-bold">Student Career:</span>{" "}
+                  {student.career}
+                </p>
+                <p>
+                  <span className="font-weight-bold">Date of Submission:</span>{" "}
+                  {student.lend_date}
+                </p>
+              </div>
+
+              <div className="card-footer">
+                <button
+                  type="button"
+                  className="btn btn-info font-weight-bold"
+                  onClick={() => this.returnBook(student.code)}
+                >
+                  Return Book
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     );
