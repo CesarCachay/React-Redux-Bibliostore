@@ -10,15 +10,12 @@ import EditClient from "./components/clients/EditClient";
 import ShowClient from "./components/clients/ShowClient";
 import NewClient from "./components/clients/NewClient";
 import Navbar from "./components/layout/Navbar";
-import Login from "./components/auth/Login";
+import Login from "./auth/Login";
 
 import store from "./store";
 import { Provider } from "react-redux";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import {
-  UserIsAuthenticated,
-  UserIsNotAuthenticated
-} from "./components/library/auth";
+import { UserIsAuthenticated, UserIsNotAuthenticated } from "./library/auth";
 
 function App() {
   return (

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
+import Swal from "sweetalert2";
 
 import { Link } from "react-router-dom";
 
@@ -100,7 +101,26 @@ class ShowBook extends Component {
                 <button
                   type="button"
                   className="btn btn-info font-weight-bold"
-                  onClick={() => this.returnBook(student.code)}
+                  onClick={() =>
+                    Swal.fire({
+                      title: "Are you sure?",
+                      text: "This book where returned?",
+                      type: "warning",
+                      showCancelButton: true,
+                      confirmButtonColor: "#3085d6",
+                      cancelButtonColor: "#d33",
+                      confirmButtonText: "Yes"
+                    }).then(result => {
+                      if (result.value) {
+                        this.returnBook(student.code);
+                        Swal.fire(
+                          "Returned!",
+                          "The book has been returned.",
+                          "success"
+                        );
+                      }
+                    })
+                  }
                 >
                   Return Book
                 </button>
