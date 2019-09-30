@@ -5,6 +5,9 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
 
+//Custom reducers
+import searchUserReducer from "./reducers/searchUserReducer";
+
 // Configure firestore
 const firebaseConfig = {
   apiKey: "AIzaSyDWg6llko4SA9-4S-n7hrHZyL9lKutDYxM",
@@ -34,7 +37,8 @@ const createStoreWithFirebase = compose(
 // Reducers
 const rootReducer = combineReducers({
   firebase: firebaseReducer,
-  firestore: firestoreReducer
+  firestore: firestoreReducer,
+  user: searchUserReducer
 });
 
 // Create initial state
