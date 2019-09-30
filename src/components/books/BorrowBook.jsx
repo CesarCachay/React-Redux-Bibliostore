@@ -76,7 +76,7 @@ class BorrowBook extends Component {
 
     if (!book) return <Spinner />;
 
-    const { noResults, result } = this.state;
+    const { result } = this.state;
 
     // let studentCard, btnAsk;
     // if (result.name) {
