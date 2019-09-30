@@ -10,6 +10,7 @@ import EditClient from "./components/clients/EditClient";
 import ShowClient from "./components/clients/ShowClient";
 import NewClient from "./components/clients/NewClient";
 import Navbar from "./components/layout/Navbar";
+import Login from "./components/auth/Login";
 
 import store from "./store";
 import { Provider } from "react-redux";
@@ -33,6 +34,8 @@ function App() {
             <Route exact path="/clients/new" component={NewClient} />
             <Route exact path="/clients/show/:id" component={ShowClient} />
             <Route exact path="/clients/edit/:id" component={EditClient} />
+
+            <Route exact path="/login" component={Login} />
           </Switch>
         </div>
       </Router>
