@@ -66,7 +66,7 @@ class Navbar extends Component {
           {isAuthenticated ? (
             <ul className="navbar-nav ml-auto">
               <li className="nav-">
-                <a href="#!" className="nav-link">
+                <a href="#!" className="nav-link mt-2">
                   {auth.email}
                 </a>
               </li>

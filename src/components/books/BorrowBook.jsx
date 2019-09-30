@@ -6,20 +6,21 @@ import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 
 import Spinner from "../layout/Spinner";
-
 import ClientCard from "../clients/ClientCard";
+
+// This will be possible to use when you connect with react-redux at the end of this component
+import { searchUser } from "../../actions/searchUserActions";
 
 class BorrowBook extends Component {
   state = {
     noResults: false,
-    search: "",
-    result: {}
+    search: ""
   };
 
   searchClient = e => {
     e.preventDefault();
     const { search } = this.state;
-    const { firestore } = this.props;
+    const { firestore, searchUser } = this.props;
 
     // Make a query in our database
     const collection = firestore.collection("clients");
@@ -29,30 +30,36 @@ class BorrowBook extends Component {
     query.then(result => {
       // This means if empty === true
       if (result.empty) {
-        this.setState({ noResults: true, result: {} });
+        searchUser({});
+        this.setState({
+          noResults: true
+        });
       } else {
         const dataFromQuery = result.docs[0];
-        this.setState({ result: dataFromQuery.data(), noResults: false });
+        searchUser(dataFromQuery.data());
+        this.setState({
+          noResults: false
+        });
       }
     });
   };
 
   // This will save the student information who ask for books
   askForBook = () => {
-    const student = this.state.result;
+    const { user, firestore, history } = this.props;
+
     // Date to return book
-    student.lend_date = new Date().toLocaleDateString();
+    user.lend_date = new Date().toLocaleDateString();
 
-    // Get the book
-    const updatedBook = this.props.book;
-    // Add the student or client to our boook
-    updatedBook.lended.push(student);
-
-    const { firestore, history, book } = this.props;
+    let lended = [];
+    lended = [...this.props.book.lended, user];
+    const book = { ...this.props.book };
+    delete book.lended;
+    book.lended = lended;
 
     // Save the changes(update) in the database from firestore
     firestore
-      .update({ collection: "books", doc: book.id }, updatedBook)
+      .update({ collection: "books", doc: book.id }, book)
       .then(() =>
         Swal.fire({
           position: "center",
@@ -72,29 +79,26 @@ class BorrowBook extends Component {
   };
 
   render() {
-    const { book } = this.props;
+    const { book, user } = this.props;
+    const { noResults } = this.state;
 
     if (!book) return <Spinner />;
 
-    const { result } = this.state;
-
-    // let studentCard, btnAsk;
-    // if (result.name) {
-    //   studentCard = <ClientCard client={result} />;
-    //   btnAsk = (
-    //     <button type="button" className="btn btn-success" onClick={askForBook}>
-    //       Ask for this book
-    //     </button>
-    //   );
-    // } else {
-    //   studentCard = null;
-    //   btnAsk = null;
-    // }
+    let resultsMessage = "";
+    if (noResults) {
+      resultsMessage = (
+        <div className="alert alert-danger text-center font-weight-bold">
+          There is no user with that code.
+        </div>
+      );
+    } else {
+      resultsMessage = null;
+    }
 
     return (
       <div className="row">
         <div className="col-12 mb-4">
-          <Link to={"/clients"} className="btn btn-secondary">
+          <Link to={"/"} className="btn btn-secondary">
             <i className="fas fa-arrow-circle-left"></i> {""} Go back
           </Link>
         </div>
@@ -125,9 +129,9 @@ class BorrowBook extends Component {
                 </div>
               </form>
               {/* Here we will show the student card and the button for borrow a book*/}
-              {result.first_name ? (
+              {user.first_name ? (
                 <>
-                  <ClientCard result={result} />
+                  <ClientCard user={user} />
                   <button
                     type="button"
                     className="btn btn-primary btn-block"
@@ -137,6 +141,7 @@ class BorrowBook extends Component {
                   </button>
                 </>
               ) : null}
+              {resultsMessage}
             </div>
           </div>
         </div>
@@ -153,7 +158,11 @@ export default compose(
       doc: props.match.params.id
     }
   ]),
-  connect(({ firestore: { ordered } }, props) => ({
-    book: ordered.book && ordered.book[0]
-  }))
+  connect(
+    ({ firestore: { ordered }, user }, props) => ({
+      book: ordered.book && ordered.book[0],
+      user: user
+    }),
+    { searchUser } //Here I'm using the actions of our custom reducers
+  )
 )(BorrowBook);
