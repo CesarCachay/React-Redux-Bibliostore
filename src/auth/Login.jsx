@@ -26,6 +26,19 @@ class Login extends Component {
   };
 
   render() {
+    let userNotFound = "";
+    const { firebase } = this.props;
+
+    if (firebase.login.catch) {
+      userNotFound = (
+        <div className="alert alert-danger text-center font-weight-bold">
+          Email or password incorrect
+        </div>
+      );
+    } else {
+      userNotFound = null;
+    }
+
     return (
       <div className="row justify-content-center">
         <div className="col-md-5">
@@ -67,6 +80,7 @@ class Login extends Component {
                   value="Log in"
                 />
               </form>
+              {userNotFound}
             </div>
           </div>
         </div>
